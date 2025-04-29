@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package pedidos;
+
+service PedidoService {
+    rpc EnviarPedido (Pedido) returns (RespostaPedido) {}
+    rpc ReceberPedido (Vazio) returns (Pedido) {}
+    rpc AtualizarStatus (AtualizacaoStatus) returns (RespostaPedido) {}
+    rpc MonitorarStatus (NumeroPedido) returns (stream StatusPedido) {}
+}
+
+message Pedido {
+    int32 numero_pedido = 1;
+    string cliente = 2;
+    repeated string itens = 3;
+    string status = 4;  // "PENDENTE", "EM_PREPARO", "PRONTO"
+}
+
+message RespostaPedido {
+    bool sucesso = 1;
+    string mensagem = 2;
+    int32 numero_pedido = 3;
+}
+
+message AtualizacaoStatus {
+    int32 numero_pedido = 1;
+    string novo_status = 2;
+}
+
+message StatusPedido {
+    int32 numero_pedido = 1;
+    string status = 2;
+    string timestamp = 3;
+}
+
+message NumeroPedido {
+    int32 numero_pedido = 1;
+}
+
+message Vazio {} 
