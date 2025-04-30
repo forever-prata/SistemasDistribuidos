@@ -1,3 +1,13 @@
+"""
+Módulo principal do servidor gRPC para gestão de pedidos
+
+Implementa o serviço definido no proto e gerencia o fluxo completo de pedidos:
+- Recebimento de novos pedidos
+- Fila de preparação
+- Atualização de status
+- Notificação de observadores
+"""
+
 import grpc
 from concurrent import futures
 import time
@@ -7,19 +17,29 @@ from collections import deque
 from datetime import datetime
 import threading
 
-# Armazenamento de pedidos
-pedidos = {}
-fila_pedidos = deque()
-contador_pedidos = 0
-observadores = {} 
-pedido_em_preparo = None
+# Estruturas globais de armazenamento
+pedidos = {}            # Dicionário de pedidos (chave: número do pedido)
+fila_pedidos = deque()  # Fila FIFO de pedidos pendentes
+contador_pedidos = 0    # Contador sequencial para números de pedido
+observadores = {}       # Observadores por pedido (padrão Observer)
+pedido_em_preparo = None  # Pedido atualmente em preparação
 
 class PedidoService(pedidos_pb2_grpc.PedidoServiceServicer):
     def EnviarPedido(self, request, context):
-        """Recebe um novo pedido do PDV/Caixa"""
+        """
+        Implementação do RPC para envio de novo pedido
+        
+        Args:
+            request (pedidos_pb2.Pedido): Dados do pedido recebido
+            context (grpc.ServicerContext): Contexto da chamada RPC
+            
+        Returns:
+            pedidos_pb2.RespostaPedido: Confirmação com número do pedido
+        """
         global contador_pedidos
         contador_pedidos += 1
         
+        # Cria e armazena novo pedido
         pedido = pedidos_pb2.Pedido(
             numero_pedido=contador_pedidos,
             cliente=request.cliente,
@@ -40,7 +60,16 @@ class PedidoService(pedidos_pb2_grpc.PedidoServiceServicer):
         )
 
     def ReceberPedido(self, request, context):
-        """Envia o próximo pedido para a cozinha"""
+        """
+        Implementação do RPC para obtenção do próximo pedido (Cozinha)
+        
+        Args:
+            request (pedidos_pb2.Vazio): Requisição vazia
+            context (grpc.ServicerContext): Contexto da chamada RPC
+            
+        Returns:
+            pedidos_pb2.Pedido: Próximo pedido da fila ou pedido vazio
+        """
         global pedido_em_preparo
         
         if pedido_em_preparo is None and fila_pedidos:
@@ -63,13 +92,23 @@ class PedidoService(pedidos_pb2_grpc.PedidoServiceServicer):
         )
 
     def AtualizarStatus(self, request, context):
-        """Atualiza o status de um pedido"""
+        """
+        Implementação do RPC para atualização de status
+        
+        Args:
+            request (pedidos_pb2.AtualizacaoStatus): Nova configuração de status
+            context (grpc.ServicerContext): Contexto da chamada RPC
+            
+        Returns:
+            pedidos_pb2.RespostaPedido: Confirmação da operação
+        """
         global pedido_em_preparo
         
         if request.numero_pedido in pedidos:
             pedido = pedidos[request.numero_pedido]
             pedido.status = request.novo_status
             
+            # Lógica especial para status PRONTO
             if request.novo_status == "PRONTO":
                 if request.numero_pedido in fila_pedidos:
                     fila_pedidos.popleft()
@@ -90,15 +129,26 @@ class PedidoService(pedidos_pb2_grpc.PedidoServiceServicer):
         )
 
     def MonitorarStatus(self, request, context):
-        """Monitora as mudanças de status de um pedido"""
+        """
+        Implementação do RPC para monitoramento de status (streaming)
+        
+        Args:
+            request (pedidos_pb2.NumeroPedido): Número do pedido a monitorar
+            context (grpc.ServicerContext): Contexto da chamada RPC
+            
+        Yields:
+            pedidos_pb2.StatusPedido: Atualizações de status em tempo real
+        """
         numero_pedido = request.numero_pedido
         if numero_pedido in pedidos:
+            # Envia status inicial
             yield pedidos_pb2.StatusPedido(
                 numero_pedido=numero_pedido,
                 status=pedidos[numero_pedido].status,
                 timestamp=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             )
             
+            # Mantém conexão aberta para atualizações
             while context.is_active():
                 if numero_pedido in pedidos:
                     status_atual = pedidos[numero_pedido].status
@@ -110,7 +160,13 @@ class PedidoService(pedidos_pb2_grpc.PedidoServiceServicer):
                 time.sleep(1)
 
     def _notificar_status(self, numero_pedido, status):
-        """Notifica todos os observadores sobre uma mudança de status"""
+        """
+        Método interno para notificação de observadores
+        
+        Args:
+            numero_pedido (int): Número do pedido atualizado
+            status (str): Novo status do pedido
+        """
         if numero_pedido in observadores:
             for callback in observadores[numero_pedido]:
                 try:
@@ -119,7 +175,14 @@ class PedidoService(pedidos_pb2_grpc.PedidoServiceServicer):
                     print(f"Erro ao notificar status: {e}")
 
 def iniciar_servidor():
-    """Inicia o servidor gRPC"""
+    """
+    Configura e inicia o servidor gRPC
+    
+    Configurações:
+    - Porta: 50051
+    - Workers: 10 threads
+    - Conexão insegura (para ambiente de desenvolvimento)
+    """
     servidor = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     pedidos_pb2_grpc.add_PedidoServiceServicer_to_server(
         PedidoService(), servidor)
@@ -127,10 +190,12 @@ def iniciar_servidor():
     servidor.start()
     print("Servidor de Pedidos iniciado na porta 50051")
     try:
+        # Mantém o servidor ativo
         while True:
-            time.sleep(86400)
+            time.sleep(86400)  # 24 horas
     except KeyboardInterrupt:
         servidor.stop(0)
 
 if __name__ == '__main__':
-    iniciar_servidor() 
+    """Ponto de entrada principal para inicialização do servidor"""
+    iniciar_servidor()

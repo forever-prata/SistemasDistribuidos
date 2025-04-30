@@ -1,3 +1,9 @@
+"""
+Módulo principal do sistema PDV (Ponto de Venda) para integração com serviço gRPC de pedidos
+
+Gerencia a interface com o usuário e monitoramento de status de pedidos em tempo real
+"""
+
 import grpc
 import pedidos_pb2
 import pedidos_pb2_grpc
@@ -6,13 +12,33 @@ import time
 from datetime import datetime
 
 class MonitorStatus(threading.Thread):
+    """
+    Thread para monitoramento contínuo do status de um pedido
+    
+    Attributes:
+        numero_pedido (int): Número do pedido sendo monitorado
+        daemon (bool): Configura a thread como daemon (encerra com o programa principal)
+        ultimo_status (str): Último status recebido do servidor
+    """
+    
     def __init__(self, numero_pedido):
+        """
+        Inicializa o monitor para um pedido específico
+        
+        Args:
+            numero_pedido (int): Número do pedido a ser monitorado
+        """
         super().__init__()
         self.numero_pedido = numero_pedido
         self.daemon = True
         self.ultimo_status = None
 
     def run(self):
+        """
+        Executa o loop de monitoramento conectado ao servidor gRPC
+        
+        Estabelece conexão contínua e exibe atualizações de status
+        """
         with grpc.insecure_channel('localhost:50051') as canal:
             stub = pedidos_pb2_grpc.PedidoServiceStub(canal)
             try:
@@ -24,7 +50,20 @@ class MonitorStatus(threading.Thread):
                 print(f"Erro ao monitorar status: {e}")
 
 def enviar_pedido(cliente, itens):
-    """Envia um novo pedido para o servidor"""
+    """
+    Envia um novo pedido para o servidor e inicia o monitoramento de status
+    
+    Args:
+        cliente (str): Nome do cliente associado ao pedido
+        itens (list[str]): Lista de itens do pedido
+        
+    Returns:
+        int: Número do pedido gerado pelo servidor
+        
+    Example:
+        >>> enviar_pedido("João Silva", ["Pizza Margherita", "Refrigerante"])
+        42
+    """
     with grpc.insecure_channel('localhost:50051') as canal:
         stub = pedidos_pb2_grpc.PedidoServiceStub(canal)
         pedido = pedidos_pb2.Pedido(
@@ -40,7 +79,12 @@ def enviar_pedido(cliente, itens):
         return resposta.numero_pedido
 
 def menu_pdv():
-    """Interface do PDV"""
+    """
+    Exibe o menu principal e gerencia o fluxo de interação com o usuário
+    
+    Returns:
+        bool: False quando o usuário escolhe sair, True caso contrário
+    """
     print("\n=== Sistema de Pedidos - PDV ===")
     print("1. Novo pedido")
     print("2. Sair")
@@ -65,6 +109,11 @@ def menu_pdv():
     return opcao != "2"
 
 if __name__ == '__main__':
+    """
+    Ponto de entrada principal do sistema PDV
+    
+    Inicia o loop principal do menu e mantém a conexão com o servidor
+    """
     print("PDV iniciado. Conectado ao servidor de pedidos.")
     while menu_pdv():
-        pass 
+        pass

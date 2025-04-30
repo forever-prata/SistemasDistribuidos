@@ -1,0 +1,516 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1">
+<meta name="generator" content="pdoc3 0.11.6">
+<title>servidor API documentation</title>
+<meta name="description" content="Módulo principal do servidor gRPC para gestão de pedidos …">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/sanitize.min.css" integrity="sha512-y1dtMcuvtTMJc1yPgEqF0ZjQbhnc/bFhyvIyVNb9Zk5mIGtqVaAB1Ttl28su8AvFMOY0EwRbAe+HCLqj6W7/KA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/13.0.0/typography.min.css" integrity="sha512-Y1DYSb995BAfxobCkKepB1BqJJTPrOp3zPL74AWFugHHmmdcvO+C48WLrUOlhGMc0QG7AE3f7gmvvcrmX2fDoA==" crossorigin>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css" crossorigin>
+<style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:1.5em;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:2em 0 .50em 0}h3{font-size:1.4em;margin:1.6em 0 .7em 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .2s ease-in-out}a:visited{color:#503}a:hover{color:#b62}.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900;font-weight:bold}pre code{font-size:.8em;line-height:1.4em;padding:1em;display:block}code{background:#f3f3f3;font-family:"DejaVu Sans Mono",monospace;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source > summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible;min-width:max-content}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em 1em;margin:1em 0}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style>
+<style media="screen and (min-width: 700px)">@media screen and (min-width:700px){#sidebar{width:30%;height:100vh;overflow:auto;position:sticky;top:0}#content{width:70%;max-width:100ch;padding:3em 4em;border-left:1px solid #ddd}pre code{font-size:1em}.name{font-size:1em}main{display:flex;flex-direction:row-reverse;justify-content:flex-end}.toc ul ul,#index ul ul{padding-left:1em}.toc > ul > li{margin-top:.5em}}</style>
+<style media="print">@media print{#sidebar h1{page-break-before:always}.source{display:none}}@media print{*{background:transparent !important;color:#000 !important;box-shadow:none !important;text-shadow:none !important}a[href]:after{content:" (" attr(href) ")";font-size:90%}a[href][title]:after{content:none}abbr[title]:after{content:" (" attr(title) ")"}.ir a:after,a[href^="javascript:"]:after,a[href^="#"]:after{content:""}pre,blockquote{border:1px solid #999;page-break-inside:avoid}thead{display:table-header-group}tr,img{page-break-inside:avoid}img{max-width:100% !important}@page{margin:0.5cm}p,h2,h3{orphans:3;widows:3}h1,h2,h3,h4,h5,h6{page-break-after:avoid}}</style>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ==" crossorigin></script>
+<script>window.addEventListener('DOMContentLoaded', () => {
+hljs.configure({languages: ['bash', 'css', 'diff', 'graphql', 'ini', 'javascript', 'json', 'plaintext', 'python', 'python-repl', 'rust', 'shell', 'sql', 'typescript', 'xml', 'yaml']});
+hljs.highlightAll();
+/* Collapse source docstrings */
+setTimeout(() => {
+[...document.querySelectorAll('.hljs.language-python > .hljs-string')]
+.filter(el => el.innerHTML.length > 200 && ['"""', "'''"].includes(el.innerHTML.substring(0, 3)))
+.forEach(el => {
+let d = document.createElement('details');
+d.classList.add('hljs-string');
+d.innerHTML = '<summary>"""</summary>' + el.innerHTML.substring(3);
+el.replaceWith(d);
+});
+}, 100);
+})</script>
+</head>
+<body>
+<main>
+<article id="content">
+<header>
+<h1 class="title">Module <code>servidor</code></h1>
+</header>
+<section id="section-intro">
+<p>Módulo principal do servidor gRPC para gestão de pedidos</p>
+<p>Implementa o serviço definido no proto e gerencia o fluxo completo de pedidos:
+- Recebimento de novos pedidos
+- Fila de preparação
+- Atualização de status
+- Notificação de observadores</p>
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="servidor.iniciar_servidor"><code class="name flex">
+<span>def <span class="ident">iniciar_servidor</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def iniciar_servidor():
+    &#34;&#34;&#34;
+    Configura e inicia o servidor gRPC
+    
+    Configurações:
+    - Porta: 50051
+    - Workers: 10 threads
+    - Conexão insegura (para ambiente de desenvolvimento)
+    &#34;&#34;&#34;
+    servidor = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
+    pedidos_pb2_grpc.add_PedidoServiceServicer_to_server(
+        PedidoService(), servidor)
+    servidor.add_insecure_port(&#39;[::]:50051&#39;)
+    servidor.start()
+    print(&#34;Servidor de Pedidos iniciado na porta 50051&#34;)
+    try:
+        # Mantém o servidor ativo
+        while True:
+            time.sleep(86400)  # 24 horas
+    except KeyboardInterrupt:
+        servidor.stop(0)</code></pre>
+</details>
+<div class="desc"><p>Configura e inicia o servidor gRPC</p>
+<p>Configurações:
+- Porta: 50051
+- Workers: 10 threads
+- Conexão insegura (para ambiente de desenvolvimento)</p></div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="servidor.PedidoService"><code class="flex name class">
+<span>class <span class="ident">PedidoService</span></span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">class PedidoService(pedidos_pb2_grpc.PedidoServiceServicer):
+    def EnviarPedido(self, request, context):
+        &#34;&#34;&#34;
+        Implementação do RPC para envio de novo pedido
+        
+        Args:
+            request (pedidos_pb2.Pedido): Dados do pedido recebido
+            context (grpc.ServicerContext): Contexto da chamada RPC
+            
+        Returns:
+            pedidos_pb2.RespostaPedido: Confirmação com número do pedido
+        &#34;&#34;&#34;
+        global contador_pedidos
+        contador_pedidos += 1
+        
+        # Cria e armazena novo pedido
+        pedido = pedidos_pb2.Pedido(
+            numero_pedido=contador_pedidos,
+            cliente=request.cliente,
+            itens=request.itens,
+            status=&#34;PENDENTE&#34;
+        )
+        
+        pedidos[contador_pedidos] = pedido
+        fila_pedidos.append(contador_pedidos)
+        observadores[contador_pedidos] = []
+        
+        self._notificar_status(contador_pedidos, &#34;PENDENTE&#34;)
+        
+        return pedidos_pb2.RespostaPedido(
+            sucesso=True,
+            mensagem=f&#34;Pedido #{contador_pedidos} recebido com sucesso!&#34;,
+            numero_pedido=contador_pedidos
+        )
+
+    def ReceberPedido(self, request, context):
+        &#34;&#34;&#34;
+        Implementação do RPC para obtenção do próximo pedido (Cozinha)
+        
+        Args:
+            request (pedidos_pb2.Vazio): Requisição vazia
+            context (grpc.ServicerContext): Contexto da chamada RPC
+            
+        Returns:
+            pedidos_pb2.Pedido: Próximo pedido da fila ou pedido vazio
+        &#34;&#34;&#34;
+        global pedido_em_preparo
+        
+        if pedido_em_preparo is None and fila_pedidos:
+            numero_pedido = fila_pedidos[0] 
+            pedido = pedidos[numero_pedido]
+            if pedido.status == &#34;PENDENTE&#34;:
+                pedido.status = &#34;EM_PREPARO&#34;
+                pedido_em_preparo = numero_pedido
+                self._notificar_status(numero_pedido, &#34;EM_PREPARO&#34;)
+                return pedido
+        
+        elif pedido_em_preparo is not None:
+            return pedidos[pedido_em_preparo]
+        
+        return pedidos_pb2.Pedido(
+            numero_pedido=0,
+            cliente=&#34;&#34;,
+            itens=[],
+            status=&#34;SEM_PEDIDOS&#34;
+        )
+
+    def AtualizarStatus(self, request, context):
+        &#34;&#34;&#34;
+        Implementação do RPC para atualização de status
+        
+        Args:
+            request (pedidos_pb2.AtualizacaoStatus): Nova configuração de status
+            context (grpc.ServicerContext): Contexto da chamada RPC
+            
+        Returns:
+            pedidos_pb2.RespostaPedido: Confirmação da operação
+        &#34;&#34;&#34;
+        global pedido_em_preparo
+        
+        if request.numero_pedido in pedidos:
+            pedido = pedidos[request.numero_pedido]
+            pedido.status = request.novo_status
+            
+            # Lógica especial para status PRONTO
+            if request.novo_status == &#34;PRONTO&#34;:
+                if request.numero_pedido in fila_pedidos:
+                    fila_pedidos.popleft()
+                if pedido_em_preparo == request.numero_pedido:
+                    pedido_em_preparo = None
+            
+            self._notificar_status(request.numero_pedido, request.novo_status)
+            
+            return pedidos_pb2.RespostaPedido(
+                sucesso=True,
+                mensagem=f&#34;Status do pedido #{request.numero_pedido} atualizado para {request.novo_status}&#34;,
+                numero_pedido=request.numero_pedido
+            )
+        return pedidos_pb2.RespostaPedido(
+            sucesso=False,
+            mensagem=f&#34;Pedido #{request.numero_pedido} não encontrado&#34;,
+            numero_pedido=request.numero_pedido
+        )
+
+    def MonitorarStatus(self, request, context):
+        &#34;&#34;&#34;
+        Implementação do RPC para monitoramento de status (streaming)
+        
+        Args:
+            request (pedidos_pb2.NumeroPedido): Número do pedido a monitorar
+            context (grpc.ServicerContext): Contexto da chamada RPC
+            
+        Yields:
+            pedidos_pb2.StatusPedido: Atualizações de status em tempo real
+        &#34;&#34;&#34;
+        numero_pedido = request.numero_pedido
+        if numero_pedido in pedidos:
+            # Envia status inicial
+            yield pedidos_pb2.StatusPedido(
+                numero_pedido=numero_pedido,
+                status=pedidos[numero_pedido].status,
+                timestamp=datetime.now().strftime(&#34;%Y-%m-%d %H:%M:%S&#34;)
+            )
+            
+            # Mantém conexão aberta para atualizações
+            while context.is_active():
+                if numero_pedido in pedidos:
+                    status_atual = pedidos[numero_pedido].status
+                    yield pedidos_pb2.StatusPedido(
+                        numero_pedido=numero_pedido,
+                        status=status_atual,
+                        timestamp=datetime.now().strftime(&#34;%Y-%m-%d %H:%M:%S&#34;)
+                    )
+                time.sleep(1)
+
+    def _notificar_status(self, numero_pedido, status):
+        &#34;&#34;&#34;
+        Método interno para notificação de observadores
+        
+        Args:
+            numero_pedido (int): Número do pedido atualizado
+            status (str): Novo status do pedido
+        &#34;&#34;&#34;
+        if numero_pedido in observadores:
+            for callback in observadores[numero_pedido]:
+                try:
+                    callback(status)
+                except Exception as e:
+                    print(f&#34;Erro ao notificar status: {e}&#34;)</code></pre>
+</details>
+<div class="desc"><p>Missing associated documentation comment in .proto file.</p></div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li>pedidos_pb2_grpc.PedidoServiceServicer</li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="servidor.PedidoService.AtualizarStatus"><code class="name flex">
+<span>def <span class="ident">AtualizarStatus</span></span>(<span>self, request, context)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def AtualizarStatus(self, request, context):
+    &#34;&#34;&#34;
+    Implementação do RPC para atualização de status
+    
+    Args:
+        request (pedidos_pb2.AtualizacaoStatus): Nova configuração de status
+        context (grpc.ServicerContext): Contexto da chamada RPC
+        
+    Returns:
+        pedidos_pb2.RespostaPedido: Confirmação da operação
+    &#34;&#34;&#34;
+    global pedido_em_preparo
+    
+    if request.numero_pedido in pedidos:
+        pedido = pedidos[request.numero_pedido]
+        pedido.status = request.novo_status
+        
+        # Lógica especial para status PRONTO
+        if request.novo_status == &#34;PRONTO&#34;:
+            if request.numero_pedido in fila_pedidos:
+                fila_pedidos.popleft()
+            if pedido_em_preparo == request.numero_pedido:
+                pedido_em_preparo = None
+        
+        self._notificar_status(request.numero_pedido, request.novo_status)
+        
+        return pedidos_pb2.RespostaPedido(
+            sucesso=True,
+            mensagem=f&#34;Status do pedido #{request.numero_pedido} atualizado para {request.novo_status}&#34;,
+            numero_pedido=request.numero_pedido
+        )
+    return pedidos_pb2.RespostaPedido(
+        sucesso=False,
+        mensagem=f&#34;Pedido #{request.numero_pedido} não encontrado&#34;,
+        numero_pedido=request.numero_pedido
+    )</code></pre>
+</details>
+<div class="desc"><p>Implementação do RPC para atualização de status</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>request</code></strong> :&ensp;<code>pedidos_pb2.AtualizacaoStatus</code></dt>
+<dd>Nova configuração de status</dd>
+<dt><strong><code>context</code></strong> :&ensp;<code>grpc.ServicerContext</code></dt>
+<dd>Contexto da chamada RPC</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>pedidos_pb2.RespostaPedido</code></dt>
+<dd>Confirmação da operação</dd>
+</dl></div>
+</dd>
+<dt id="servidor.PedidoService.EnviarPedido"><code class="name flex">
+<span>def <span class="ident">EnviarPedido</span></span>(<span>self, request, context)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def EnviarPedido(self, request, context):
+    &#34;&#34;&#34;
+    Implementação do RPC para envio de novo pedido
+    
+    Args:
+        request (pedidos_pb2.Pedido): Dados do pedido recebido
+        context (grpc.ServicerContext): Contexto da chamada RPC
+        
+    Returns:
+        pedidos_pb2.RespostaPedido: Confirmação com número do pedido
+    &#34;&#34;&#34;
+    global contador_pedidos
+    contador_pedidos += 1
+    
+    # Cria e armazena novo pedido
+    pedido = pedidos_pb2.Pedido(
+        numero_pedido=contador_pedidos,
+        cliente=request.cliente,
+        itens=request.itens,
+        status=&#34;PENDENTE&#34;
+    )
+    
+    pedidos[contador_pedidos] = pedido
+    fila_pedidos.append(contador_pedidos)
+    observadores[contador_pedidos] = []
+    
+    self._notificar_status(contador_pedidos, &#34;PENDENTE&#34;)
+    
+    return pedidos_pb2.RespostaPedido(
+        sucesso=True,
+        mensagem=f&#34;Pedido #{contador_pedidos} recebido com sucesso!&#34;,
+        numero_pedido=contador_pedidos
+    )</code></pre>
+</details>
+<div class="desc"><p>Implementação do RPC para envio de novo pedido</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>request</code></strong> :&ensp;<code>pedidos_pb2.Pedido</code></dt>
+<dd>Dados do pedido recebido</dd>
+<dt><strong><code>context</code></strong> :&ensp;<code>grpc.ServicerContext</code></dt>
+<dd>Contexto da chamada RPC</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>pedidos_pb2.RespostaPedido</code></dt>
+<dd>Confirmação com número do pedido</dd>
+</dl></div>
+</dd>
+<dt id="servidor.PedidoService.MonitorarStatus"><code class="name flex">
+<span>def <span class="ident">MonitorarStatus</span></span>(<span>self, request, context)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def MonitorarStatus(self, request, context):
+    &#34;&#34;&#34;
+    Implementação do RPC para monitoramento de status (streaming)
+    
+    Args:
+        request (pedidos_pb2.NumeroPedido): Número do pedido a monitorar
+        context (grpc.ServicerContext): Contexto da chamada RPC
+        
+    Yields:
+        pedidos_pb2.StatusPedido: Atualizações de status em tempo real
+    &#34;&#34;&#34;
+    numero_pedido = request.numero_pedido
+    if numero_pedido in pedidos:
+        # Envia status inicial
+        yield pedidos_pb2.StatusPedido(
+            numero_pedido=numero_pedido,
+            status=pedidos[numero_pedido].status,
+            timestamp=datetime.now().strftime(&#34;%Y-%m-%d %H:%M:%S&#34;)
+        )
+        
+        # Mantém conexão aberta para atualizações
+        while context.is_active():
+            if numero_pedido in pedidos:
+                status_atual = pedidos[numero_pedido].status
+                yield pedidos_pb2.StatusPedido(
+                    numero_pedido=numero_pedido,
+                    status=status_atual,
+                    timestamp=datetime.now().strftime(&#34;%Y-%m-%d %H:%M:%S&#34;)
+                )
+            time.sleep(1)</code></pre>
+</details>
+<div class="desc"><p>Implementação do RPC para monitoramento de status (streaming)</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>request</code></strong> :&ensp;<code>pedidos_pb2.NumeroPedido</code></dt>
+<dd>Número do pedido a monitorar</dd>
+<dt><strong><code>context</code></strong> :&ensp;<code>grpc.ServicerContext</code></dt>
+<dd>Contexto da chamada RPC</dd>
+</dl>
+<h2 id="yields">Yields</h2>
+<dl>
+<dt><code>pedidos_pb2.StatusPedido</code></dt>
+<dd>Atualizações de status em tempo real</dd>
+</dl></div>
+</dd>
+<dt id="servidor.PedidoService.ReceberPedido"><code class="name flex">
+<span>def <span class="ident">ReceberPedido</span></span>(<span>self, request, context)</span>
+</code></dt>
+<dd>
+<details class="source">
+<summary>
+<span>Expand source code</span>
+</summary>
+<pre><code class="python">def ReceberPedido(self, request, context):
+    &#34;&#34;&#34;
+    Implementação do RPC para obtenção do próximo pedido (Cozinha)
+    
+    Args:
+        request (pedidos_pb2.Vazio): Requisição vazia
+        context (grpc.ServicerContext): Contexto da chamada RPC
+        
+    Returns:
+        pedidos_pb2.Pedido: Próximo pedido da fila ou pedido vazio
+    &#34;&#34;&#34;
+    global pedido_em_preparo
+    
+    if pedido_em_preparo is None and fila_pedidos:
+        numero_pedido = fila_pedidos[0] 
+        pedido = pedidos[numero_pedido]
+        if pedido.status == &#34;PENDENTE&#34;:
+            pedido.status = &#34;EM_PREPARO&#34;
+            pedido_em_preparo = numero_pedido
+            self._notificar_status(numero_pedido, &#34;EM_PREPARO&#34;)
+            return pedido
+    
+    elif pedido_em_preparo is not None:
+        return pedidos[pedido_em_preparo]
+    
+    return pedidos_pb2.Pedido(
+        numero_pedido=0,
+        cliente=&#34;&#34;,
+        itens=[],
+        status=&#34;SEM_PEDIDOS&#34;
+    )</code></pre>
+</details>
+<div class="desc"><p>Implementação do RPC para obtenção do próximo pedido (Cozinha)</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>request</code></strong> :&ensp;<code>pedidos_pb2.Vazio</code></dt>
+<dd>Requisição vazia</dd>
+<dt><strong><code>context</code></strong> :&ensp;<code>grpc.ServicerContext</code></dt>
+<dd>Contexto da chamada RPC</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>pedidos_pb2.Pedido</code></dt>
+<dd>Próximo pedido da fila ou pedido vazio</dd>
+</dl></div>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+</article>
+<nav id="sidebar">
+<div class="toc">
+<ul></ul>
+</div>
+<ul id="index">
+<li><h3><a href="#header-functions">Functions</a></h3>
+<ul class="">
+<li><code><a title="servidor.iniciar_servidor" href="#servidor.iniciar_servidor">iniciar_servidor</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-classes">Classes</a></h3>
+<ul>
+<li>
+<h4><code><a title="servidor.PedidoService" href="#servidor.PedidoService">PedidoService</a></code></h4>
+<ul class="">
+<li><code><a title="servidor.PedidoService.AtualizarStatus" href="#servidor.PedidoService.AtualizarStatus">AtualizarStatus</a></code></li>
+<li><code><a title="servidor.PedidoService.EnviarPedido" href="#servidor.PedidoService.EnviarPedido">EnviarPedido</a></code></li>
+<li><code><a title="servidor.PedidoService.MonitorarStatus" href="#servidor.PedidoService.MonitorarStatus">MonitorarStatus</a></code></li>
+<li><code><a title="servidor.PedidoService.ReceberPedido" href="#servidor.PedidoService.ReceberPedido">ReceberPedido</a></code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</nav>
+</main>
+<footer id="footer">
+<p>Generated by <a href="https://pdoc3.github.io/pdoc" title="pdoc: Python API documentation generator"><cite>pdoc</cite> 0.11.6</a>.</p>
+</footer>
+</body>
+</html>
